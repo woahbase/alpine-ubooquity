@@ -1,0 +1,24 @@
+ARG ARCH=frommakefile
+ARG DOCKERSRC=frommakefile
+ARG USERNAME=frommakefile
+#
+FROM ${USERNAME}/${DOCKERSRC}:${ARCH}
+#
+ARG UBVERSION=2.1.0
+#
+ENV UBOOQUITY_HOME=/opt/ubooquity
+#
+RUN set -xe \
+    && apk add -Uu --no-cache --purge curl unzip \
+    && mkdir -p ${UBOOQUITY_HOME}/fonts \
+    && curl -o /tmp/ubooquity.zip -jkSL "http://vaemendis.net/ubooquity/downloads/Ubooquity-${UBVERSION}.zip" \
+    && unzip /tmp/ubooquity.zip -d ${UBOOQUITY_HOME} \
+    && rm -rf /var/cache/apk/* /tmp/*
+#
+COPY root/ /
+#
+VOLUME /config /books /comics /files
+#
+EXPOSE 2202 2203
+#
+ENTRYPOINT ["/init"]
