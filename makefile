@@ -5,7 +5,7 @@ ARCH      := $(shell uname -m | sed "s_armv7l_armhf_")# armhf/x86_64 auto-detect
 OPSYS     := alpine
 SHCOMMAND := /bin/bash
 SVCNAME   := ubooquity
-UBVERSION := 2.1.1
+UBVERSION := 2.1.2
 USERNAME  := woahbase
 
 PUID       := $(shell id -u)
