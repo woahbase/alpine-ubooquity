@@ -1,0 +1,67 @@
+#!/usr/bin/with-contenv bash
+set -e
+
+vecho () { if [ "${S6_VERBOSITY:-1}" -gt 0 ]; then echo "[$0] $@"; fi; }
+
+UBOOQUITY_HOME="${UBOOQUITY_HOME:-/opt/ubooquity}";
+UBOOQUITY_CONFIG="${UBOOQUITY_CONFIG:-/config}";
+UBOOQUITY_PATH_BOOKS="${UBOOQUITY_PATH_BOOKS:-/books}";
+UBOOQUITY_PATH_COMICS="${UBOOQUITY_PATH_COMICS:-/comics}";
+UBOOQUITY_PATH_FILES="${UBOOQUITY_PATH_FILES:-/files}";
+
+# make our folders
+vecho "Ensure configuration directories exist.";
+mkdir -p \
+	${UBOOQUITY_CONFIG}/fonts \
+	${UBOOQUITY_PATH_BOOKS} \
+	${UBOOQUITY_PATH_COMICS} \
+	${UBOOQUITY_PATH_FILES} \
+	;
+
+# ensure config exists
+# function to substitute paths in config files
+_subst () {
+    sed \
+    -e "s|ADMIN_PORT|${UBOOQUITY_ADMIN_PORT:-2203}|g" \
+    -e "s|IS_ADMIN_ENABLED|${UBOOQUITY_ADMIN_ENABLED:-true}|g" \
+    -e "s|LIBRARY_PORT|${UBOOQUITY_LIBRARY_PORT:-2202}|g" \
+    -e "s|PATH_BOOKS|${UBOOQUITY_PATH_BOOKS}|g" \
+    -e "s|PATH_COMICS|${UBOOQUITY_PATH_COMICS}|g" \
+    -e "s|PATH_FILES|${UBOOQUITY_PATH_FILES}|g" \
+    -e "s|REVERSE_PROXY_PREFIX|${UBOOQUITY_SUBPATH}|g" \
+    $1 > $2;
+}
+# if [ ! -f ${UBOOQUITY_CONFIG}/preferences.xml ];
+# then
+#     vecho "Setting up /defaults/preferences.xml as ${UBOOQUITY_CONFIG}/preferences.xml";
+#     # cp /defaults/preferences.xml ${UBOOQUITY_CONFIG}/preferences.xml;
+#     _subst /defaults/preferences.xml ${UBOOQUITY_CONFIG}/preferences.xml;
+# fi;
+if [ ! -f ${UBOOQUITY_CONFIG}/preferences.json ];
+then
+    vecho "Setting up /defaults/preferences.json as ${UBOOQUITY_CONFIG}/preferences.json";
+    # cp /defaults/preferences.json ${UBOOQUITY_CONFIG}/preferences.json;
+    _subst /defaults/preferences.json ${UBOOQUITY_CONFIG}/preferences.json;
+fi;
+
+# permissions
+vecho "Fixing permissions.";
+chown -R ${S6_USER:-alpine}:${PGID:-1000} \
+	${UBOOQUITY_HOME} \
+	${UBOOQUITY_CONFIG} \
+	;
+chown ${S6_USER:-alpine}:${PGID:-1000} \
+	${UBOOQUITY_PATH_BOOKS} \
+	${UBOOQUITY_PATH_COMICS} \
+	${UBOOQUITY_PATH_FILES} \
+	;
+
+if [ -n "${UBOOQUITY_PERMFIX_FILES}" ]; # may become cumbersome with large number of files
+then
+    vecho "Fixing permissions on files in ${UBOOQUITY_PATH_BOOKS} ${UBOOQUITY_PATH_COMICS} ${UBOOQUITY_PATH_FILES}.";
+    find ${UBOOQUITY_PATH_BOOKS} ${UBOOQUITY_PATH_COMICS} ${UBOOQUITY_PATH_FILES} \
+        \! -user ${S6_USER:-alpine} -exec \
+        chown --no-dereference \
+        ${S6_USER:-alpine}:${PGID:-1000} \
+        '{}' +;
+fi;

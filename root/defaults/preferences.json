@@ -1,14 +1,14 @@
 {
   "filesPaths" : [ {
-    "pathString" : "/files",
+    "pathString" : "PATH_FILES",
     "userName" : [ ]
   } ],
   "comicsPaths" : [ {
-    "pathString" : "/comics",
+    "pathString" : "PATH_COMICS",
     "userName" : [ ]
   }],
   "booksPaths" : [ {
-    "pathString" : "/books",
+    "pathString" : "PATH_BOOKS",
     "userName" : [ ]
   } ],
   "users" : [ ],
@@ -16,8 +16,8 @@
   "isComicsProviderEnabled" : true,
   "isBooksProviderEnabled" : true,
   "isUserManagementEnabled" : true,
-  "libraryPortNumber" : 2202,
-  "adminPortNumber" : 2203,
+  "libraryPortNumber" : LIBRARY_PORT,
+  "adminPortNumber" : ADMIN_PORT,
   "comicWidth" : 160,
   "comicHeight" : 230,
   "comicsPaginationNumber" : 30,
@@ -27,14 +27,14 @@
   "minimizeToTray" : false,
   "minimizeOnStartup" : false,
   "autoscanPeriod" : 0,
-  "isRemoteAdminEnabled" : true,
+  "isRemoteAdminEnabled" : IS_ADMIN_ENABLED,
   "theme" : "Default",
   "isShrinkingCacheEnabled" : false,
   "shrunkPageWidth" : 1536,
   "shrunkPageHeight" : 2500,
   "shrinkingCachePath" : "",
   "autoScanAtLaunch" : false,
-  "reverseProxyPrefix" : "ubooquity",
+  "reverseProxyPrefix" : "REVERSE_PROXY_PREFIX",
   "keystorePath" : "",
   "keystorePassword" : "",
   "isOpdsProviderEnabled" : true,
@@ -43,5 +43,7 @@
   "enableFolderMetadataDisplay" : true,
   "bookmarkUsingCookies" : true,
   "displayTitleInsteadOfFileName" : true,
-  "keepUnreachableSharedFolders" : true
+  "keepUnreachableSharedFolders" : true,
+  "isCalibreLibrary" : false,
+  "instanceId" : ""
 }

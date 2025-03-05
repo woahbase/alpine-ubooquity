@@ -1,4 +1,4 @@
-comics/
-config/
-books/
-files/
+data/books/
+data/comics/
+data/config/
+data/files/

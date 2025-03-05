@@ -1,0 +1,18 @@
+#!/usr/bin/with-contenv bash
+set -e
+
+UBOOQUITY_HOME="${UBOOQUITY_HOME:-/opt/ubooquity}";
+UBOOQUITY_CONFIG="${UBOOQUITY_CONFIG:-/config}";
+UBOOQUITY_ARGS="${UBOOQUITY_ARGS:- --headless --host 0.0.0.0}";
+JAVAMEM="${MAXMEM:-1024}";
+
+cd ${UBOOQUITY_HOME} || exit 1;
+
+s6-setuidgid ${S6_USER:-alpine} \
+exec \
+	java \
+	-Xmx"$JAVAMEM"m \
+	-jar ${UBOOQUITY_HOME}/Ubooquity.jar \
+	--workdir ${UBOOQUITY_CONFIG} \
+	${UBOOQUITY_ARGS} \
+	;
