@@ -28,7 +28,7 @@ VERSION   ?= 2.1.5
 TESTCMD   := \
 	uname -a; \
 	java -version; \
-	java -jar /opt/Ubooquity.jar --help; \
+	java -jar /opt/ubooquity/Ubooquity.jar --help; \
 	#
 # -- }}}
 
